@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DeepSeek Balance Whale Widget",
+    "description": "A resident widget in the bottom-right corner of the DSH Web UI: whale bubble, DeepSeek API balance, today's usage, per-turn cost, and fully customizable bubble content. This fork adds a \"today's requests / token usage\" module on top of upstream 0.4.2."
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "dsh-whale-widget",
+  "version": "0.4.2-fork.1",
+  "description": "DSH Web 界面右下角的 DeepSeek 余额小鲸鱼挂件:余额/今日已用/峰谷定价、自定义泡泡点击序列(文本/余额/今日/峰谷/图片/随机语句与并列加权选择)、逐行样式与字体、悬浮快捷编辑、音效与每轮消耗、自定义角色/动图/音效、吸附与翻转自定义。本 fork 基于上游 0.4.2,新增「今日请求数 / 今日 token 用量」泡泡模块(宿主读 $DSH_HOME/sessions 聚合全部工作区,占位符 {reqs}/{tokens}/{tokens_billed}/{tokens_in}/{tokens_out}/{tokens_cache}/{tokens_raw}/{cache_hit})。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "balance",
+    "widget"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "icon": "./icon.png",
+  "exports": {
+    ".": "./lib/index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.png",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "assets",
+    "icon.png",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "README.md",
+    "PROVENANCE.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/change-ouyang/dsh-whale-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/change-ouyang/dsh-whale-widget/issues"
+  },
+  "homepage": "https://github.com/change-ouyang/dsh-whale-widget#readme",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT"
+}

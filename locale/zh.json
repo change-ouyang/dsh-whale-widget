@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "DeepSeek 余额小鲸鱼",
+    "description": "DSH Web 界面右下角的常驻挂件：小鲸鱼气泡图、DeepSeek API 余额、今日已用、每轮对话消耗，泡泡内容可完全自定义。本 fork 在上游 0.4.2 基础上新增「今日请求数 / 今日 token 用量」模块。"
+  }
+}
