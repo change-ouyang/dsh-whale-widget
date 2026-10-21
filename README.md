@@ -14,30 +14,52 @@ DeepSeek Harness（DSH）Web 界面右下角的常驻挂件：小鲸鱼气泡图
 本仓库基于 **[上游 `MeteorNOX/DeepSeek-Balance-Whale-Widget` 的 v0.4.2](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget)**
 （MIT）继续开发，**不是**上游的官方仓库。上游原作者与历史贡献者的署名完整保留在文末「致谢」。
 
-相对上游 v0.4.2，**只有 3 个文件不同**：
+相对上游 v0.4.2，**改动只有这些**：
 
 | 文件 | 改动 |
 | --- | --- |
 | `lib/usage-stats.mjs` | **新增文件**。递归扫 `$DSH_HOME/sessions/**/session.v4.jsonl.zstd`，按 zstd 帧逐帧解码，聚合 `assistant/message.usage` 四个桶；每文件贡献按天缓存到 `$DSH_HOME/.dshw-usage-stats.json`，只有 size/mtime 变过的文件重扫 ⇒ 幂等 |
 | `lib/index.js` | 实例化统计器（启动预热）；`/dsh-whale/balance.json` 增加 `usageStats` 字段；新增路由 `/dsh-whale/usage-stats.json`（带 `?refresh=1`） |
 | `assets/whale-widget.js` | `state.usageStats` 接数据；新增占位符 `{reqs}` `{tokens}` `{tokens_billed}` `{tokens_in}` `{tokens_out}` `{tokens_cache}` `{tokens_raw}` `{cache_hit}`；新增置顶模块「今日请求/用量」 |
+| `locale/` | **新增**。插件管理界面显示用的标题与描述（中英各一份）——上游没有 |
+| `tools/` | **新增**。会话日志探针 + 合成夹具生成器，见 [`tools/README.md`](tools/README.md) |
+| `test/` | **新增**。`lib/usage-stats.mjs` 的回归测试（19 项，用合成夹具，不读真实日志） |
+| `FORK-NOTES.md` | **新增**。本 fork 的详细说明 |
 
-其余 16 个文件与上游 v0.4.2 **逐字节相同**（含 `LICENSE` 与 `PROVENANCE.md`）。
+除以上之外，其余文件与上游 v0.4.2 **逐字节相同**（含 `LICENSE` 与 `PROVENANCE.md`）。
 
 新增的占位符：
 
 | 占位符 | 含义 |
 | --- | --- |
 | `{reqs}` | 今日请求数（LLM 调用次数） |
-| `{tokens}` | 今日 token 总量（未缓存输入 + 输出 + 缓存读） |
-| `{tokens_billed}` | 计费 token（未缓存输入 + 输出，不含缓存读） |
+| `{tokens}` | 今日 token 总量（未缓存输入 + 输出 + 缓存读 + 缓存写） |
+| `{tokens_billed}` | 计费 token（未缓存输入 + 输出，不含缓存） |
 | `{tokens_in}` / `{tokens_out}` | 未缓存输入 / 输出 |
 | `{tokens_cache}` | 缓存读 |
 | `{tokens_raw}` | 总量原始整数（不加 K/M 单位） |
 | `{cache_hit}` | 缓存命中率 |
 
-口径是**全部工作区合计 / 本地自然日**（不加 UTC 偏移，和「今天」一致）。
-更详细的说明见 [`FORK-NOTES.md`](FORK-NOTES.md)。
+口径是**全部工作区合计 / 本地自然日**。更详细的说明见 [`FORK-NOTES.md`](FORK-NOTES.md)。
+
+## 测试与探针工具
+
+```bash
+npm test                                   # 19 项，全部基于合成夹具，不读你的任何日志
+node tools/make-fixture.mjs /tmp/fakehome  # 造一份假日志来试工具
+DSH_HOME=/tmp/fakehome node tools/today-breakdown.mjs
+node tools/today-breakdown.mjs             # 对着自己的真实日志只读统计
+```
+
+`tools/` 下还有 `usage-report.mjs`（按 model / 按天）、`today-by-provider.mjs`、
+`inspect-session.mjs`、`zstd-frames.mjs`。用途与口径见 [`tools/README.md`](tools/README.md)。
+
+> 数据源有个坑值得知道：会话日志是**追加写的多帧 zstd**，而 Node 的
+> `zstdDecompressSync` **与** `createZstdDecompress()` 流式解码都**只解第一帧**
+> （可用 `node tools/zstd-frames.mjs <日志>` 自己验证）——所以必须按 magic
+> `28 B5 2F FD` 切帧。这就是 `lib/usage-stats.mjs` 里 `forEachFrameText()` 的由来。
+
+> 因为用到 Node 的 zstd API，本插件要求 **Node ^22.19.0 || >=24.0.0**。
 
 ---
 

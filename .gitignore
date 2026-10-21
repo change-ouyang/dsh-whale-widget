@@ -5,7 +5,10 @@
 # ==========================================
 dshw-*.json
 dshw-*.json.bak*
-.dshw-usage-arc
+# 用量统计缓存（注意有前导点，上面那条盖不住它）
+.dshw-*.json
+.dshw-*.json.tmp
+.dshw-usage-archive.json
 hive.json
 .credentials.yaml
 .env
@@ -16,7 +19,12 @@ gh-token.txt
 whale-roles/
 whale-audio/
 whale-bubble-imgs/
+
+# ⚠️ 会话日志：里面是真实对话内容与工作区路径，任何情况下都不得入库。
+#    `sessions/` 也顺带挡住 tools/make-fixture.mjs 误在仓库里生成的夹具。
 sessions/
+*.jsonl.zstd
+fakehome/
 
 # 依赖与临时物
 node_modules/
