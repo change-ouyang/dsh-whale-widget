@@ -1,0 +1,19 @@
+# 行尾与二进制处理 —— 显式钉住,不依赖每个使用者的 core.autocrlf 设置。
+
+# 默认:文本按内容识别,仓库内统一 LF
+* text=auto eol=lf
+
+# 二进制:绝不做行尾转换(做了就会损坏 —— assets/ 下有大量图片与音频)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.mp3   binary
+*.wav   binary
+*.ogg   binary
+*.wasm  binary
+*.zstd  binary
+*.zip   binary
+*.tgz   binary
